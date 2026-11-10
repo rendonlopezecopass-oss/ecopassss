@@ -166,6 +166,38 @@ header .barra{max-width:none;padding-left:20px;padding-right:20px}
 .lateral nav{order:0;width:auto}
 @media(max-width:700px){header .barra{flex-wrap:nowrap;gap:8px;padding:10px 12px}.usr{gap:6px}.usr .btn.chico{padding:6px 8px;font-size:11.5px}#btnMenu{padding:0 2px}.logo{font-size:18px}}
 @media(max-width:420px){#btnRegistro{display:none}}
+/* ===== BOTÓN DE AYUDA FLOTANTE ===== */
+.btn-ayuda{
+  position:fixed;
+  bottom:22px;
+  right:22px;
+  z-index:180;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:12px 18px;
+  background:var(--verde2);
+  color:#fff;
+  text-decoration:none;
+  font-weight:700;
+  font-size:14px;
+  border-radius:999px;
+  box-shadow:0 6px 20px #12302280, 0 2px 6px #0003;
+  transition:transform .2s, background .2s, box-shadow .2s;
+  border:2px solid #ffffff33;
+}
+.btn-ayuda:hover{
+  background:var(--oro);
+  color:var(--verde);
+  transform:translateY(-3px) scale(1.04);
+  box-shadow:0 10px 26px #123022aa;
+}
+.btn-ayuda svg{flex:none}
+.btn-ayuda:active{transform:translateY(-1px) scale(1)}
+@media(max-width:600px){
+  .btn-ayuda span{display:none}
+  .btn-ayuda{padding:14px;bottom:16px;right:16px}
+}
 </style>
 </head>
 <body>
@@ -370,6 +402,15 @@ header .barra{max-width:none;padding-left:20px;padding-right:20px}
 
 <div class="modal" id="modal" role="dialog" aria-modal="true"><div id="modalCont"></div></div>
 <div class="toast" id="toast" role="status"></div>
+<!-- BOTÓN DE AYUDA FLOTANTE -->
+<button onclick="abrirManual()" class="btn-ayuda" title="Ver manual de usuario">
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+    <line x1="12" y1="17" x2="12.01" y2="17"/>
+  </svg>
+  <span>Ayuda</span>
+</button>
 
 <script>
 /* ===================== CONFIGURACIÓN ===================== */
@@ -386,7 +427,8 @@ const SEMESTRES=["5to","6to"];
 const TIPOS={apunte:"Apunte",libro:"Libro",guia:"Guía",examen:"Modelo de examen"};
 /* Material inicial: el mismo que ya tenía tu sitio (los PDF deben estar en la misma carpeta del repositorio). */
 const SEMILLA=[
- {id:"s1",titulo:"Gujarati – Econometría (5ta Ed.)",autor:"D. Gujarati",carrera:"Economía",semestre:"5to",materia:"Econometría 1",tipo:"libro",enlace:"Econometria_Gujarati.pdf"},
+ {id:"s1",titulo:"Gujarati y Porter – Econometría (5ta Ed.)",autor:"Damodar N. Gujarati y Dawn C. Porter",carrera:"Economía",semestre:"5to",materia:"Econometría 1",tipo:"libro",enlace:"https://github.com/rendonlopezecopass-oss/ecopass/raw/e45f7111916ab2cbb419d4368d0013247a97c180/Damodar%20N.%20Gujarati%20%20-%20Econometria%205ta%20Ed.pdf",descripcion:"Texto base de econometría clásica: regresión simple y múltiple, heteroscedasticidad, autocorrelación, series de tiempo y ecuaciones simultáneas."},
+{id:"s1b",titulo:"Gujarati y Porter – Econometría (5ta Ed.)",autor:"Damodar N. Gujarati y Dawn C. Porter",carrera:"Economía",semestre:"6to",materia:"Econometría 2",tipo:"libro",enlace:"https://github.com/rendonlopezecopass-oss/ecopass/raw/e45f7111916ab2cbb419d4368d0013247a97c180/Damodar%20N.%20Gujarati%20%20-%20Econometria%205ta%20Ed.pdf",descripcion:"Mismo texto base, útil para repasar en Econometría 2 (series de tiempo, panel, ecuaciones simultáneas)."},
  {id:"s2",titulo:"Apuntes Economía Fiscal (ECO330)",autor:"",carrera:"Economía",semestre:"5to",materia:"Economía Fiscal",tipo:"apunte",enlace:"ECONOMIA_FISCAL_ECO330.pdf"},
  {id:"s3",titulo:"BCB – Historia del Dinero",autor:"Banco Central de Bolivia",carrera:"Economía",semestre:"5to",materia:"Economía Monetaria",tipo:"libro",enlace:"2-Historia-Dinero-BCB.pdf"},
  {id:"s4",titulo:"Texto de Planificación Económica",autor:"",carrera:"Economía",semestre:"6to",materia:"Planificación Económica",tipo:"libro",enlace:"Planificacion_Economica.pdf"},
@@ -523,6 +565,18 @@ document.addEventListener("click",async e=>{
  if(e.target.closest("[data-cerrar]")||e.target.id==="modal")cerrarModal();
 });
 function abrirModal(h){$("#modalCont").innerHTML=h;$("#modal").classList.add("abierto")}
+function abrirManual(){
+  abrirModal(`
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <h2 style="margin:0">📘 Manual de usuario</h2>
+      <button class="btn chico claro" data-cerrar>Cerrar</button>
+    </div>
+    <iframe src="manualecopass.pdf" style="width:100%;height:70vh;border:1px solid #ddd;border-radius:10px"></iframe>
+    <div style="margin-top:12px;text-align:center">
+      <a class="btn chico" href="manualecopass.pdf" target="_blank" rel="noopener">Abrir en pestaña nueva ↗</a>
+    </div>
+  `);
+}
 function cerrarModal(){$("#modal").classList.remove("abierto")}
 document.addEventListener("keydown",e=>{if(e.key==="Escape")cerrarModal()});
 
